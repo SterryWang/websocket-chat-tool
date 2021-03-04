@@ -1,0 +1,130 @@
+.switchLabel {
+  font-weight: bolder !important;
+  color: white !important;
+  font-size: 15px !important;
+
+
+}
+
+
+.testswitch {
+  position: relative;
+  float: left;
+  width: 60px;
+  margin-right: 30px;
+  margin-left: 20px;
+  font-size: 0.6em;
+
+}
+
+.testswitch-checkbox {
+  display: none;
+}
+
+.testswitch-label {
+  display: block;
+  overflow: hidden;
+  cursor: pointer;
+  border-radius: 20px;
+}
+
+.testswitch-inner {
+  display: block;
+  width: 200%;
+  margin-left: -100%;
+  transition: margin 0.3s ease-in 0s;
+  text-align: left;
+}
+
+.testswitch-inner::before,
+.testswitch-inner::after {
+  display: block;
+  float: right;
+  width: 50%;
+  height: 20px;
+  padding: 0;
+  line-height: 1.8em;
+  font-size: 8px;
+  color: white;
+  font-family: Trebuchet, Arial, sans-serif;
+  font-weight: bold;
+  box-sizing: border-box;
+}
+
+.testswitch-inner::after {
+  content: attr(data-on);
+  padding-left: 10px;
+  background-color: #FFAB47;
+  color: #FFFFFF;
+}
+
+.testswitch-inner::before {
+  content: attr(data-off);
+  padding-right: 10px;
+  background-color: #3F9FE8;
+  color: white;
+  text-align: right;
+}
+
+.testswitch-switch {
+  position: absolute;
+  display: block;
+  width: 12px;
+  height: 12px;
+  margin: 4px;
+  background: #FFFFFF;
+  bottom: 5px;
+  border-radius: 20px;
+  transition: all 0.3s ease-in 0s;
+  text-align: right;
+}
+
+.testswitch-checkbox:checked + .testswitch-label .testswitch-inner {
+  margin-left: 0;
+}
+
+.testswitch-checkbox:checked + .testswitch-label .testswitch-switch {
+  right: 0px;
+}
+
+/*以下是标题样式设定*/
+.titleContainer {
+  position: absolute;
+  -webkit-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  left: 50%;
+  /*top: 50%;*/
+}
+
+.title {
+  color: #333;
+  letter-spacing: -20px;
+  margin-left: -16px;
+  font-weight: 800;
+  color: transparent;
+  font-size: 80px;
+  /*
+  background: url("https://images.blogthings.com/thecolorfulpatterntest/pattern-2.png") repeat;
+  */
+  background: url("images/title_pattern.png") repeat;
+  background-position: 10% 30%;
+  -webkit-background-clip: text;
+  position: absolute;
+  text-align: center;
+  line-height: 90px;
+  width: 100%;
+}
+
+.subtitle {
+  display: block;
+  text-transform: uppercase;
+  padding-top: 10px;
+  width: 340px;
+  text-align: right;
+  color:black!important;
+  font-family: "Microsoft YaHei", serif!important;
+
+}
+
+

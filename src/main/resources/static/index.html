@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>ZJJG通讯平台</title>
+  <link href="bootstrap.css" rel="stylesheet">
+
+  <link href="mystyle.css" rel="stylesheet">
+  <link rel="bk" href="images/background2.jpg">
+  <link href="http_cdn.bootcss.com_layer_2.3_skin_layer.css" rel="stylesheet">
+  <!-- <link href="https://cdn.bootcss.com/layer/2.3/skin/layer.css" rel="stylesheet">-->
+  <style>
+    body {
+      font-family: Helvetica Neue, Helvetica, Hiragino Sans GB, Microsoft YaHei, \\5FAE\8F6F\96C5\9ED1, Arial, sans-serif;
+
+      padding: 20px;
+      background: #caeaf7 url("images/background2.jpg");
+      background-size: cover;
+
+
+    }
+
+    /*聊天气泡样式*/
+    /*别人的信息显示在屏幕左侧*/
+    .chat-sender {
+      clear: both;
+      font-size: inherit;
+    }
+
+    .chat-sender div:nth-of-type(1) {
+      float: left;
+    }
+
+    .chat-sender div:nth-of-type(2) {
+      margin: 0 50px 2px 50px;
+      padding: 0px;
+      color: #848484;
+      font-size: 12px;
+      text-align: left;
+    }
+
+    .chat-sender div:nth-of-type(3) {
+      background-color: white;
+      float: left;
+      margin: 0 50px 10px 8px;
+      padding: 10px 10px 10px 10px;
+      border-radius: 7px;
+      text-indent: -12px;
+    }
+
+    .chat-receiver {
+      clear: both;
+      font-size: inherit;
+    }
+
+    /*自己的的信息显示在屏幕右侧*/
+    .chat-receiver div:nth-of-type(1) {
+      float: right;
+    }
+
+    .chat-receiver div:nth-of-type(2) {
+      margin: 0px 50px 2px 50px;
+      padding: 0px;
+      color: #848484;
+      font-size: 12px;
+      text-align: right;
+    }
+
+    .chat-receiver div:nth-of-type(3) {
+      float: right;
+      background-color: #b2e281;
+      margin: 0px 8px 10px 50px;
+      padding: 10px 10px 10px 10px;
+      border-radius: 7px;
+    }
+
+    .chat-receiver div:first-child img,
+    .chat-sender div:first-child img {
+      width: 40px;
+      height: 40px;
+      /*border-radius: 10%;*/
+    }
+
+    .chat-left_triangle {
+      height: 0px;
+      width: 0px;
+      border-width: 6px;
+      border-style: solid;
+      border-color: transparent white transparent transparent;
+      position: relative;
+      left: -22px;
+      top: 3px;
+    }
+
+    .chat-right_triangle {
+      height: 0px;
+      width: 0px;
+      border-width: 6px;
+      border-style: solid;
+      border-color: transparent transparent transparent #b2e281;
+      position: relative;
+      right: -22px;
+      top: 3px;
+    }
+
+    .chat-notice {
+      clear: both;
+      font-size: 70%;
+      color: white;
+      text-align: center;
+      margin-top: 15px;
+      margin-bottom: 15px;
+    }
+
+    .chat-notice span {
+      background-color: #cecece;
+      line-height: 25px;
+      border-radius: 5px;
+      padding: 5px 10px;
+    }
+
+    /*分隔线*/
+
+    h1 {
+      text-align: center;
+      font-family: "Microsoft YaHei UI", serif;
+      color: black;
+      font-size: 26px;
+      margin-top: 15px;
+      margin-bottom: 10px;
+
+    }
+
+    /*.titleContainer{
+      padding: 20px;
+    }*/
+    /*.windowWrap{
+      padding: 15px;
+    }*/
+
+    /*设置两个聊天窗口大小*/
+    #console, #sysHelper {
+      height: 500px;
+      overflow: auto;
+      /*width: 50%;*/
+    }
+
+    .chatWindow {
+      width: 50%;
+    }
+
+    .windowName {
+      position: relative;
+      left: 37%;
+    }
+
+    button[type = "button"] {
+      /*cursor:pointer !important;*/
+      margin: 5px;
+      width: 108px !important;
+      /*background-color: #fff !important;*/
+      /*color: black !important;*/
+      /* background-image: -webkit-linear-gradient(top, #ffffff, #133fe0) !important;*/
+
+    }
+
+    button[type = "button"]:active {
+
+      background-image: none !important;
+
+    }
+
+    button[type = "button"]:hover {
+
+      background-position: 0 -44px !important;
+
+    }
+
+    .loginButton {
+      font-family: PingFangSC-Semibold, "Microsoft YaHei", Arial, sans-serif, Helvetica, STHeiti;
+
+      color: white !important;
+      background: #3385ff;
+      background-color: #4e6ef2;
+      border: 0
+    }
+
+    .loginButton:hover {
+      background-color: #4662D9;
+
+    }
+
+    .sendButton {
+      background-color: #348903 !important;
+      color: white !important;
+    }
+
+    .sendButton:hover {
+      background-color: #348969 !important;
+    }
+
+    .input-small {
+      margin: 5px;
+    }
+
+
+    .inputAreaScroll {
+
+      height: 6em;
+      width: 19em;
+
+    }
+
+    .hint {
+      color: #888;
+
+    }
+
+    .well {
+      /*border-bottom: grey !important;
+      border-top: grey !important;*/
+      border-radius: 0.5em !important;
+      border: 1px solid #d6d6d6 !important;
+      background-color: #eee;
+      font-family: 'Microsoft Yahei', '微软雅黑', 'Hiragino Sans GB', Tahoma, Helvetica, Arial, '宋体', nimbussansl, liberationsans, freesans, clean, sans-serif, 'Segoe UI Emoji', 'Segoe UI Symbol';;
+
+    }
+
+    /*显示窗口支持换行*/
+    .console {
+      white-space: pre-wrap;
+      font-family: 'Microsoft Yahei', '微软雅黑', 'Hiragino Sans GB', Tahoma, Helvetica, Arial, '宋体', nimbussansl, liberationsans, freesans, clean, sans-serif, 'Segoe UI Emoji', 'Segoe UI Symbol';
+      line-height: 1.6;
+
+
+    }
+
+    .form-inline {
+      background-color: ghostwhite;
+    }
+
+    .switchLabel {
+      text-align: center;
+    }
+
+    /*.operate{
+      border-bottom: red!important;
+      border-top:grey!important;
+      border-radius: 0.5em !important;
+      border: 1px solid gray!important;
+
+    }*/
+
+    .username-msg {
+      color: orange;
+      background-color: white;
+    }
+
+    .connect-msg {
+      color: green;
+    }
+
+    .disconnect-msg {
+      color: red;
+    }
+
+    .broadcast {
+      color: black;
+      background-color: white;
+      display: inline-block;
+      float: left;
+      line-height: 1.6;
+
+    }
+
+    .send-msg {
+      color: #888
+    }
+
+    .sys-msg {
+      color: #888
+    }
+
+  </style>
+
+  <script src="js/socket.io/socket.io.js"></script>
+  <script src="js/moment.min.js"></script>
+  <script src="js/jquery-1.10.1.min.js"></script>
+  <script src="js/http_cdn.bootcss.com_axios_0.19.0-beta.1_axios.js"></script>
+  <script src="js/http_cdn.bootcss.com_layer_2.3_layer.js"></script>
+  <!--<script src="https://cdn.bootcss.com/axios/0.19.0-beta.1/axios.min.js"></script>
+  <script src="https://cdn.bootcss.com/layer/2.3/layer.js"></script>-->
+  <script>
+    let token = 'user' + Math.floor((Math.random() * 1000) + 1);
+    //let url = `http://127.0.0.1:8081?token=${token}`;
+    let url = null;
+    let userName = null;
+    let socket = null;
+    //登录状态
+    let isLogin = false;
+    //连接认证是否出现错误（后天重名校验未通过）
+    let isError = false;
+    //开关状态标志位
+    //群消息接收开关
+    let groupTalkSwitch = true;
+    //群消息通知开关
+    let groupTalkInformSwitch = true;
+    let sysHelperInformSwitch = true;
+    //聊天消息时间显示节点
+    let lastTimeTag4Msg = null;
+
+    // 各种开关时间监听
+    $(document).ready(function () {
+
+      //开关事件监听
+      $("#onoffswitch").on('click', function () {
+        if ($("#onoffswitch").is(':checked')) {
+          console.log("群消息通知开关在ON的状态下");
+
+          groupTalkInformSwitch = true;
+          layer.msg("群消息通知已开启", {icon: 6});
+        } else {
+          console.log("群消息通知开关在OFF的状态下");
+          groupTalkInformSwitch = false;
+          layer.msg("群消息通知已关闭！", {icon: 5})
+        }
+
+      });
+
+
+      $("#onoffswitch2").on('click', function () {
+        if ($("#onoffswitch2").is(':checked')) {
+          console.log("群消息接收开关在ON的状态下");
+          groupTalkSwitch = true;
+          layer.msg("群消息接收已开启！", {icon: 6})
+
+        } else {
+          console.log("群消息通知开关在OFF的状态下");
+          groupTalkSwitch = false;
+          layer.msg("已屏蔽群消息", {icon: 5});
+
+        }
+
+
+      });
+
+      $("#onoffswitch3").on('click', function () {
+        if ($("#onoffswitch3").is(':checked')) {
+          console.log("应用助手通知开关在ON的状态下");
+          sysHelperInformSwitch = true;
+          layer.msg("应用助手通知已开启！", {icon: 6})
+
+        } else {
+          console.log("应用助手通知开关在OFF的状态下");
+          sysHelperInformSwitch = false;
+          layer.msg("应用助手通知已关闭", {icon: 5});
+
+        }
+      });
+      /*快捷键事件监听*/
+      document.onkeydown = function (event) {
+        /*if(event.target.type === 'text'){
+            return;
+   　　}
+ 　　　　 if(event.shiftKey && event.keyCode === 72){
+    　　　　　　//调出帮助页面
+    　　　　}*/
+        if (event.altKey && event.keyCode === 13) {
+          //alert("按了alt+enter");
+          sendChat();
+
+        }
+        if (event.ctrlKey && event.keyCode === 13) {
+          //("按了ctrl+enter");
+          sendBroadcast();
+
+        }
+
+      };
+      /*标题跟随鼠标变色*/
+      let mouseX, mouseY;
+      const ww = $(window).width();
+      const wh = $(window).height();
+      let traX, traY;
+      $(document).mousemove(function (e) {
+        mouseX = e.pageX;
+        mouseY = e.pageY;
+        traX = ((2 * mouseX) / 200) + 10;
+        traY = ((2 * mouseY) / 200) + 30;
+        $(".title").css({
+          "background-position": traX + "%" + traY + "%"
+        });
+      });
+
+
+    });
+
+
+    function sendConnect() {
+
+      if (isLogin) {
+        alert('已登录，无需重复登录');
+        return;
+      }
+      userName = $('#loginName').val();
+
+
+      if (userName === '') {
+        layer.msg('请输入用户名', {icon: 5});
+        return;
+      }
+
+
+      //token = 'user' + Math.floor((Math.random() * 100000) + 1);
+      //直接用用户名做tocken,不支持同名用户登录
+      token = userName;
+      let randNum = Math.floor((Math.random() * 100000) + 1);
+      url = `http://127.0.0.1:8081?token=${token}&name=${userName}&randNum=${randNum}`;
+
+
+      socket = io.connect(url);
+
+      socket.on('connect', function () {
+        isLogin = true;
+        let connMsg = `<div class="chat-notice"><span style="color: green">系统通知: 你(${userName})已经成功连接至websocket服务器</span></div>`;
+        printTime();
+        output(connMsg);
+        /*
+              output(`<span class="connect-msg">系统通知: 你(${userName})已经成功连接至websocket服务器</span>`);
+      */
+
+      });
+
+      socket.on('join', function (data) {
+        output(`<span class="sys-msg">${data.groupId} 群通知: 新人 ${data.userId} 请爆照</span>`);
+      });
+
+      socket.on('chat', function (data) {
+
+        let msgContainer = `<div class="chat-sender"><div><img src="images/other.jpg"></div><div style="color: orange">来自 ${data.fromUid} 的悄悄话</div><div><div class="chat-left_triangle"></div><span>${data.message}</span></div></div>`;
+        output(msgContainer);
+
+        /*output(`<span class="username-msg">收到来自 ${data.fromUid} 的悄悄话: ${data.message}</span>`);*/
+        //调用浏览器通知
+        showNotification(data.fromUid + "悄悄对你说：", data.message, 'nothing');
+      });
+
+      socket.on('group', function (data) {
+        output(`<span class="username-msg">${data.groupId} 群消息: ${data.fromUid} 说: ${data.message}</span>`);
+      });
+
+      socket.on('disconnect', function () {
+        isLogin = false;
+        let disConnMsg = `<div class="chat-notice"><span style="color: red">系统通知: 你(${userName})你已从websocket服务器断开连接</span></div>`;
+
+        printTime();
+        output(disConnMsg);
+        //output(`<span class="disconnect-msg">系统通知: 你已从websocket服务器断开连接</span>`);
+      });
+
+      socket.on('broadcast', function (data) {
+        //alert(data);
+        //判断群消息接收开关是否打开
+        if (groupTalkSwitch) {
+          printTime();
+          //判断是自己的消息还是别人发来的的消息，开始组装待打印信息
+          if (isFromMe(data.fromUid)) {
+            let msgContainer = `<div class="chat-receiver"><div><img src="images/me.jpg"></div><div>${data.fromUserName}</div><div><div class="chat-right_triangle"></div><span>${data.message}</span> </div></div>`;
+            output(msgContainer);
+          } else {
+            let msgContainer = `<div class="chat-sender"><div><img src="images/other.jpg"></div><div>${data.fromUserName}</div><div><div class="chat-left_triangle"></div><span>${data.message}</span></div></div>`;
+            output(msgContainer);
+
+          }
+          //调用浏览器通知
+          if (groupTalkInformSwitch) {
+            showNotification("【群发消息】" + data.fromUid + "说：", data.message, 'nothing');
+          }
+          //output(`<div class="broadcast">群发消息：${data.fromUserName} 说:${data.message}</div>`);
+
+        }
+
+
+      });
+      //应用助手监听开启
+      socket.on('sysHelper', function (data) {
+
+
+        let msgContainer = `<div class="chat-sender"><div><img src="images/robot1.jpg"></div><div>${data.fromUserName} ${data.sendTime}</div><div><div class="chat-left_triangle"></div><span>${data.message}</span></div></div>`;
+        sysHelperOutput(msgContainer);
+
+        //调用浏览器通知
+        if (sysHelperInformSwitch) {
+          showNotification("【" + data.fromUserName+"】" , data.message, data.contentType, 'nothing');
+        }
+        //output(`<div class="broadcast">群发消息：${data.fromUserName} 说:${data.message}</div>`);
+
+
+      });
+
+
+      //主要用于连接认证失败时拒绝
+      socket.on('error', function (data) {
+        isError = true;
+        let errorMsg = `<div class="chat-notice"><span style="color: red">异常提示:${data.errorMsg}</span></div>`;
+        printTime();
+        output(errorMsg);
+        //output(`<span class="disconnect-msg">异常提示:${data.errorMsg} </span>`);
+        socket.disconnect();
+
+      });
+
+
+      setTimeout(function () {
+
+        updateOnlineUsers();
+
+      }, 1500);
+
+      //每隔10s更新在线用户列表
+      window.setInterval(function () {
+        // alert("定时更新用户名");
+        updateOnlineUsers();
+        //layer.msg("更新了用户列表");
+      }, 10000);
+
+      //alert("监听开启");
+
+    }
+
+    function sendDisconnect() {
+
+      if (isLogin) {
+        socket.disconnect();
+        isLogin = false;
+        // sessionStorage.clear();
+        //alert("缓存已清除");
+      }
+    }
+
+    function sendBroadcast() {
+      if (!isLogin) {
+        layer.alert("请先连接到服务器！");
+        return;
+      }
+      if (!groupTalkSwitch) {
+        layer.alert("请先打开群消息接收开关才允许发送群消息！");
+        return;
+
+      }
+      if ($('#msg').val() === '') {
+        layer.msg('你不说点什么嘛?', {icon: 5});
+        return;
+      }
+      let msg = {
+        message: $('#msg').val(),
+        fromUid: token,
+        fromUserName: userName
+      };
+      axios.post('/demo/send/broadcast', msg).then((response) => {
+        const {flag, message} = response.data;
+        /*if (flag) {
+        layer.msg(message, {icon: 6});
+      } else {
+        layer.msg(message, {icon: 5});
+      }*/
+        /*改成仅在服务端响应信息为异常的时候提示，发送成功时不提示*/
+        if (!flag) {
+          layer.msg("发送失败！", {icon: 6});
+        }
+      });
+    }
+
+    function sendJoin() {
+      let joinRequest = {
+        userId: token,
+        groupId: "666"
+
+      };
+      socket.emit('join', joinRequest);
+    }
+
+    function sendGroup() {
+      let message = $('#msg').val();
+
+      if (message === '') {
+        layer.msg('你不说点什么嘛?', {icon: 5});
+        return;
+      }
+
+      $('#msg').val('');
+      let groupRequest = {
+        fromUid: token,
+        groupId: "666",
+        message: message
+      };
+      socket.emit('group', groupRequest, function (data) {
+        if (data) {
+          layer.msg(data, {icon: 5});
+        }
+      });
+    }
+
+    function sendChat() {
+      if (!isLogin) {
+        layer.alert("请先连接到服务器！");
+        return;
+
+      }
+
+
+      // let toUserId = $('#to').val();
+      let toUserId = $("#toUserInput").val();
+      if (toUserId === "0") {
+        layer.alert("请选择私聊用户");
+        return;
+      }
+      let message = $('#msg').val();
+
+      if (toUserId === '') {
+        layer.msg('请输入对方昵称', {icon: 5});
+        return;
+      }
+      if (message === '') {
+        layer.msg('你不说点什么嘛?', {icon: 5});
+        return;
+      }
+      //$('#to').val('');//原来的输入框清空
+      $('#msg').val(''); //信息框清空
+
+      let singleRequest = {
+        fromUid: token,
+        toUid: toUserId,
+        message: message
+      };
+      socket.emit('chat', singleRequest, function (data) {
+        /*
+              output(`<span class="username-msg">系统通知: 你刚刚和 ${singleRequest.toUid} 说了句悄悄话</span>`);
+      */
+        if (data && data.flag) {
+          let msgContainer = `<div class="chat-receiver" ><div><img src="images/me.jpg"></div><div style="color: orange">你悄悄对 ${singleRequest.toUid}说</div><div><div  class="chat-right_triangle"></div><span>${singleRequest.message}</span></div></div>`;
+          printTime();
+          output(msgContainer);
+          // output(`<span class="username-msg">你悄悄对${singleRequest.toUid}说：${singleRequest.message}</span>`);
+        } else {
+          let errMsg = `<div class="chat-notice"><span style="color: red">系统通知: 悄悄话, ${data.message}</span></div>`;
+          printTime();
+          output(errMsg);
+          //output(`<span class="disconnect-msg">系统通知: 悄悄话, ${data.message}</span>`);
+        }
+      });
+    }
+
+    function output(message) {
+      //$('#console').prepend(message);
+      $('#console').append(message);
+      scrollToBottom("console");
+
+      /*
+    let currentTime = "<span class='time'>" + moment().format('YYYY-MM-DD HH:mm:ss.SSS') + "</span>";
+    let element = $("<div>" + currentTime + " " + message + "</div>");
+    $('#console').prepend(element);*/
+
+    }
+
+    /*信息窗专用打印函数*/
+    function sysHelperOutput(message) {
+      $('#sysHelper').append(message);
+      scrollToBottom("sysHelper");
+
+    }
+
+    /*清空屏幕*/
+    function clearScreen() {
+      $('#console').empty();
+
+    }
+
+    function clearInfoWindow() {
+      $('#sysHelper').empty();
+
+    }
+
+    /*浏览器通知*/
+
+    function showNotification(title, msg, contentType, imgUrl) {
+      /*聊天窗口为用户当前浏览页面时，不通知*/
+      if (!document.hidden) {
+        return
+      }
+      //判断是否是文本格式的通知，否则通知不支持
+      if (contentType !== "plainText") {
+        msg = contentType + "格式通知，请点击查看详情";
+
+      }
+      var Notification = window.Notification || window.mozNotification || window.webkitNotification;
+      // 判断浏览器是否支持桌面通知
+      if (Notification) {
+        Notification.requestPermission(function (result) {
+          //result 默认值'default'等同于拒绝 'denied' -用户选择了拒绝 'granted' -用户同意启用通知
+          if ("granted" != result) {
+            alert('请授权浏览器能够进行通知!');
+            return false;
+          } else {
+            var tag = "sds" + Math.random();
+            var notify = new Notification(
+              title,
+              {
+                dir: 'auto',
+                lang: 'zh-CN',
+                tag: tag,//实例化的notification的id
+                icon: imgUrl,//通知的缩略图,icon 支持ico、png、jpg、jpeg格式
+                title: title, //通知的标题
+                body: msg //通知的具体内容
+              }
+            );
+            // 定义通知窗口点击函数
+            notify.onclick = function () {
+              //如果通知消息被点击,通知窗口将被激活(跳转到当前页面)
+              window.focus();
+            };
+            // 定义通知错误事件
+            notify.onerror = function () {
+              // console.log("");
+            };
+            // 定义通知显示事件 可以设置多少秒之后关闭 也可以不设置关闭
+            notify.onshow = function () {
+              // 窗口显示 播放音频
+              var audio = new Audio("./10418.wav");
+              audio.play();
+              // 窗口显示3S后关闭
+              setTimeout(function () {
+                //把下面这行代码注解掉，通知窗口显示4s后消失，但是通知信息留在通知栏
+                // notify.close();
+              }, 4000);
+            };
+            // 定义通知关闭事件
+            notify.onclose = function () {
+
+            };
+          }
+        });
+      } else {
+        // 提示不支持系统通知
+        alert('您的浏览器不支持系统通知,建议使用Chrome浏览');
+      }
+    }
+
+    /* showNotification('通知标题','这是一条测试通知啦啦啦啦啦了啦啦啦啦啦阿拉拉了','nothing');*/
+
+    function updateOnlineUsers() {
+
+      if (!isLogin) {
+        //alert("请先连接到服务器！");
+        return;
+      }
+
+      let msg = {
+        message: $('#msg').val(),
+        fromUid: token
+      };
+      axios.post('/demo/send/getAllUsers').then((response) => {
+        //alert("数据接收完成");
+        const {flag, message} = response.data;
+        let listId = $('#dataList');
+        initDaTaList();
+        for (let i = 0; i < message.length; i++) {
+          //私聊对象跳过自己不予显示
+          if (token === message[i].userId) {
+            continue
+          }
+          let newOption = "<option value=" + message[i].userId + ">" + message[i].userName + "</option>";
+          listId.append(newOption);
+          // $('#console').prepend(newOption);
+
+
+        }
+
+        /* let selector = $('#selectFrame');
+       initSelector();
+       for (let i = 0; i < message.length; i++) {
+         //私聊对象跳过自己
+         if (token === message[i].userId){continue}
+         let newOption = "<option value=" + message[i].userId + ">" + message[i].userName + "</option>";
+         selector.append(newOption);
+
+
+       }*/
+
+      });
+
+    }
+
+    /**
+     * 废弃
+     * 初始化下拉框
+     */
+    function initSelector() {
+      let selector = $('#selectFrame');
+      selector.empty();
+      let initOption = " <option value=\"0\">请选择私聊用户</option>";
+      selector.append(initOption);
+
+
+    }
+
+    /**
+     * 初始化datalist
+     */
+    function initDaTaList() {
+      let listId = $('#dataList');
+      listId.empty();
+      /*  let initOption = " <option value=\"0\">请选择私聊用户</option>";
+      selector.append(initOption);*/
+
+
+    };
+
+    //判断是来信是否是自己
+    function isFromMe(fromUserId) {
+      return fromUserId === userName;
+
+
+    };
+
+    //超过5分钟间隔则打印时间，供output函数都要调用
+    function validIfPrintTime(nowDate) {
+      if (lastTimeTag4Msg === null) {
+        return true
+      }
+      ;
+      let gap = nowDate.diff(lastTimeTag4Msg, 'seconds');
+      return gap >= 10;
+
+    };
+
+    //打印时间戳
+    function printTime() {
+
+      let nowDate = moment();
+      if (validIfPrintTime(nowDate)) {
+        let formatDate = nowDate.format('YYYY年MM月DD日 HH:mm');
+
+
+        let MsgTime = `<div class="chat-notice"><span>${formatDate}</span></div>`;
+        output(MsgTime);
+        lastTimeTag4Msg = nowDate;
+        console.info("最近的时间点=" + nowDate);
+
+      }
+
+    }
+
+    //滚动条滚动到最底部
+    function scrollToBottom(elementId) {
+      let scrollElement = document.getElementById(elementId);
+      scrollElement.scrollTop = scrollElement.scrollHeight;
+
+
+    }
+
+
+  </script>
+</head>
+<body>
+
+<!--<button type="button" style="float:right"  onClick="sendDisconnect()" class="btn" >断开</button>-->
+<div >
+
+  <div class="operate" style="display: inline-block;">
+
+    <div class="testswitch">
+      <label for="onoffswitch3" class="switchLabel" style="width:60px; display: inline-block;">应用助手通知开关</label>
+      <input class="testswitch-checkbox" id="onoffswitch3" type="checkbox" checked="checked">
+      <label class="testswitch-label" for="onoffswitch3">
+        <span class="testswitch-inner" data-on="ON" data-off="OFF"></span>
+        <span class="testswitch-switch"></span>
+      </label>
+    </div>
+    <div class="testswitch">
+      <label class="switchLabel" for="onoffswitch" style="width:60px; display: inline-block;">群消息通知开关</label>
+      <input class="testswitch-checkbox" id="onoffswitch" type="checkbox" checked="checked">
+      <label class="testswitch-label" for="onoffswitch">
+        <span id="informswitch" class="testswitch-inner" data-on="ON" data-off="OFF"></span>
+        <span class="testswitch-switch"></span>
+      </label>
+
+    </div>
+    <div class="testswitch">
+      <label for="onoffswitch2" class="switchLabel" style="width:60px; display: inline-block;">群消息接收开关</label>
+      <input class="testswitch-checkbox" id="onoffswitch2" type="checkbox" checked="checked">
+      <label class="testswitch-label" for="onoffswitch2">
+        <span class="testswitch-inner" data-on="ON" data-off="OFF"></span>
+        <span class="testswitch-switch"></span>
+      </label>
+
+    </div>
+  </div>
+  <div class=" titleContainer" style="margin-top: 10px;display: inline-block">
+    <div class="title">ZJJ<span style="padding-left:16px;">G</span>
+    </div>
+    <div class="subtitle">＠即时通讯平台</div>
+  </div>
+
+  <div class="login" style="display: inline-block;float: right">
+    <button type="button" style="float:right" onClick="sendConnect()" class="btn loginButton">连接</button>
+    <input id="loginName" style="float:right" class="input-small" type="text" placeholder="用户名"/>
+  </div>
+</div>
+
+<!--<div class="head1">
+  <br>
+  <h1>ZJJG通讯平台</h1>
+</div>-->
+
+<div class="windowWrap" style="margin-top: 30px">
+  <div class="chatWindow" style="display:inline-block;float: left">
+
+    <div class="clearButton" style="display:inline-block;">
+      <button type="button" onClick="clearScreen()" class="btn">清空聊天窗</button>
+    </div>
+    <div class="windowName" style="display:inline-block;">聊天窗</div>
+    <div id="console" class="well console">
+    </div>
+  </div>
+
+  <div class="chatWindow" style="display:inline-block;float: right">
+    <div class="windowTitle">
+      <div class="clearButton" style="display:inline-block;">
+        <button type="button" onClick="clearInfoWindow()" class="btn">清空信息窗</button>
+      </div>
+      <div class="windowName" style="display:inline-block;">信息窗</div>
+    </div>
+    <div id="sysHelper" class="well  console">
+    </div>
+  </div>
+</div>
+
+
+<form class="well form-inline" onsubmit="return false;">
+  <!--
+    <input id="msg" class="input-xlarge" type="text" placeholder="随便输点啥"/>
+  -->
+  <!--  <div class="abs cover pnl-input">-->
+  <div>
+    <div class="inputArea">
+      <!--<textarea class="scroll" id="msg" wrap="hard" placeholder="在此输入文字信息..."></textarea>-->
+      <textarea style="width: 445px" class="inputAreaScroll" id="msg" wrap="hard" placeholder="在此输入文字信息..."></textarea>
+      <div class="abs atcom-pnl scroll hide" id="atcomPnl">
+        <ul class="atcom" id="atcom"></ul>
+      </div>
+    </div>
+    <div style="margin-left: 216px">
+      <label class="hint" for="sendBroadCast">快捷键：Ctrl + Enter</label>
+      <button type="button" onClick="sendBroadcast()" class="btn sendButton" id="sendBroadCast">发送群消息</button>
+    </div>
+  </div>
+
+  <div style="margin-top: 15px">
+    <!--<select id="selectFrame" >
+      <option value="0">请选择私聊用户</option>
+    </select>-->
+    <input id="toUserInput" placeholder="你想跟谁私聊，支持模糊查询" list="dataList"/>
+    <datalist id="dataList">
+      <!--<option value="1001"></option>
+      <option value="1002"></option>-->
+    </datalist>
+    <!--
+      <input id="to" class="input-xlarge" type="text" placeholder="私聊发给谁"/>-->
+    <label for="chat" class="hint">快捷键：Alt + Enter</label>
+    <button type="button" onClick="sendChat()" class="btn sendButton" id="chat">发送私聊信息</button>
+  </div>
+
+  <!--<button type="button" onClick="sendJoin()" class="btn" id="join">加入群聊</button>
+  <button type="button" onClick="sendGroup()" class="btn" id="send">群聊</button>-->
+
+
+</form>
+
+
+</body>
+</html>

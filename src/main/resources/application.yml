@@ -1,0 +1,20 @@
+server:
+  ssl:
+    # 证书路径
+    key-store: classpath:server.keystore
+    key-alias: tomcat
+    enabled: true
+    key-store-type: JKS
+    #与申请时输入一致
+    key-store-password: 123456
+    # 浏览器默认端口 和 80 类似
+  port: 443
+  http:
+    port: 8080
+  servlet:
+    context-path: /demo
+ws:
+  server:
+    port: 8081 #socket server 服务端口
+    host: localhost
+    maxOnline: 100
