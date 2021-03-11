@@ -8,13 +8,13 @@ server:
     #与申请时输入一致
     key-store-password: 123456
     # 浏览器默认端口 和 80 类似
-  port: 443
+  port: 8089
   http:
-    port: 8080
+    port: 9876
   servlet:
     context-path: /demo
 ws:
   server:
     port: 8081 #socket server 服务端口
-    host: localhost
+    host: 0.0.0.0
     maxOnline: 100

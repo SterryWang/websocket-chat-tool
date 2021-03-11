@@ -70,7 +70,7 @@ public class MessageEventHandler {
             String userId = client.getHandshakeData().getSingleUrlParam("token");
             //判断用户是否已存在，存在则拒绝连接
             if (socketChannelDao.ifPresent(userId)) {
-                log.error("用户名{}已存在，请使用其他用户名登录！");
+                log.error("用户名{}已存在，请使用其他用户名登录！",userId);
                 repeatNameSessions.put(client.getSessionId(), userId);
                 ErrorMsg errorMsg = new ErrorMsg();
                 errorMsg.setErrorMsg("【连接异常】用户名" + userId + "已存在，请刷新网页后使用其他用户名登录！");

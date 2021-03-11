@@ -193,6 +193,7 @@
     .sendButton {
       background-color: #348903 !important;
       color: white !important;
+      font-family: 'Microsoft Yahei', '微软雅黑', 'Hiragino Sans GB', Tahoma, Helvetica, Arial, '宋体', nimbussansl, liberationsans, freesans, clean, sans-serif, 'Segoe UI Emoji', 'Segoe UI Symbol' !important;
     }
 
     .sendButton:hover {
@@ -291,9 +292,14 @@
   <!--<script src="https://cdn.bootcss.com/axios/0.19.0-beta.1/axios.min.js"></script>
   <script src="https://cdn.bootcss.com/layer/2.3/layer.js"></script>-->
   <script>
+
     let token = 'user' + Math.floor((Math.random() * 1000) + 1);
     //let url = `http://127.0.0.1:8081?token=${token}`;
     let url = null;
+    let hostname =  document.location.hostname;
+    console.info(document.location.host);
+    console.info(document.location.hostname);
+    console.info(window.location.href);
     let userName = null;
     let socket = null;
     //登录状态
@@ -308,6 +314,7 @@
     let sysHelperInformSwitch = true;
     //聊天消息时间显示节点
     let lastTimeTag4Msg = null;
+    let sysHelperAutoScroll=true;
 
     // 各种开关时间监听
     $(document).ready(function () {
@@ -354,6 +361,19 @@
           console.log("应用助手通知开关在OFF的状态下");
           sysHelperInformSwitch = false;
           layer.msg("应用助手通知已关闭", {icon: 5});
+
+        }
+      });
+      $("#onoffswitch4").on('click', function () {
+        if ($("#onoffswitch4").is(':checked')) {
+          console.log("消息窗自动滚动开关在ON的状态下");
+          sysHelperAutoScroll = true;
+          layer.msg("消息窗自动滚动已开启！", {icon: 6})
+
+        } else {
+          console.log("消息窗自动滚动开关在OFF的状态下");
+          sysHelperAutoScroll = false;
+          layer.msg("消息窗自动滚动已关闭", {icon: 5});
 
         }
       });
@@ -415,7 +435,9 @@
       //直接用用户名做tocken,不支持同名用户登录
       token = userName;
       let randNum = Math.floor((Math.random() * 100000) + 1);
-      url = `http://127.0.0.1:8081?token=${token}&name=${userName}&randNum=${randNum}`;
+      //url = `http://127.0.0.1:8081?token=${token}&name=${userName}&randNum=${randNum}`;
+      url =`http://${hostname}:8081?token=${token}&name=${userName}&randNum=${randNum}`
+      console.info('websocket_url='+url);
 
 
       socket = io.connect(url);
@@ -442,7 +464,7 @@
 
         /*output(`<span class="username-msg">收到来自 ${data.fromUid} 的悄悄话: ${data.message}</span>`);*/
         //调用浏览器通知
-        showNotification(data.fromUid + "悄悄对你说：", data.message, 'nothing');
+        showNotification(data.fromUid + "悄悄对你说：", data.message,'plainText', 'nothing');
       });
 
       socket.on('group', function (data) {
@@ -474,7 +496,7 @@
           }
           //调用浏览器通知
           if (groupTalkInformSwitch) {
-            showNotification("【群发消息】" + data.fromUid + "说：", data.message, 'nothing');
+            showNotification("【群发消息】" + data.fromUid + "说：", data.message, 'plainText','nothing');
           }
           //output(`<div class="broadcast">群发消息：${data.fromUserName} 说:${data.message}</div>`);
 
@@ -486,12 +508,12 @@
       socket.on('sysHelper', function (data) {
 
 
-        let msgContainer = `<div class="chat-sender"><div><img src="images/robot1.jpg"></div><div>${data.fromUserName} ${data.sendTime}</div><div><div class="chat-left_triangle"></div><span>${data.message}</span></div></div>`;
+        let msgContainer = `<div class="chat-sender"><div><img src="images/robot1.jpg"></div><div>${data.fromUserName} ${data.sendTime}</div><div style="margin-top: -20px;margin-left: 50px"><div class="chat-left_triangle"></div><span>${data.message}</span></div></div>`;
         sysHelperOutput(msgContainer);
 
         //调用浏览器通知
         if (sysHelperInformSwitch) {
-          showNotification("【" + data.fromUserName+"】" , data.message, data.contentType, 'nothing');
+          showNotification("【" + data.fromUserName + "】", data.message, data.contentType, 'nothing');
         }
         //output(`<div class="broadcast">群发消息：${data.fromUserName} 说:${data.message}</div>`);
 
@@ -565,7 +587,12 @@
         layer.msg(message, {icon: 5});
       }*/
         /*改成仅在服务端响应信息为异常的时候提示，发送成功时不提示*/
-        if (!flag) {
+        if (flag) {
+          //发送成功则清空输入框
+          $('#msg').val(''); //输入框清空
+
+        } else {
+
           layer.msg("发送失败！", {icon: 6});
         }
       });
@@ -666,7 +693,9 @@
     /*信息窗专用打印函数*/
     function sysHelperOutput(message) {
       $('#sysHelper').append(message);
+      if(sysHelperAutoScroll){
       scrollToBottom("sysHelper");
+      }
 
     }
 
@@ -830,7 +859,7 @@
       }
       ;
       let gap = nowDate.diff(lastTimeTag4Msg, 'seconds');
-      return gap >= 10;
+      return gap >= 300;
 
     };
 
@@ -865,7 +894,7 @@
 <body>
 
 <!--<button type="button" style="float:right"  onClick="sendDisconnect()" class="btn" >断开</button>-->
-<div >
+<div>
 
   <div class="operate" style="display: inline-block;">
 
@@ -893,7 +922,14 @@
         <span class="testswitch-inner" data-on="ON" data-off="OFF"></span>
         <span class="testswitch-switch"></span>
       </label>
-
+    </div>
+    <div class="testswitch">
+      <label for="onoffswitch4" class="switchLabel" style="width:75px; display: inline-block;">信息窗自动滚动开关</label>
+      <input class="testswitch-checkbox" id="onoffswitch4" type="checkbox" checked="checked">
+      <label class="testswitch-label" for="onoffswitch4">
+        <span class="testswitch-inner" data-on="ON" data-off="OFF"></span>
+        <span class="testswitch-switch"></span>
+      </label>
     </div>
   </div>
   <div class=" titleContainer" style="margin-top: 10px;display: inline-block">
@@ -914,7 +950,7 @@
 </div>-->
 
 <div class="windowWrap" style="margin-top: 30px">
-  <div class="chatWindow" style="display:inline-block;float: left">
+  <div class="chatWindow" style="display:inline-block;float: left;width: 40%">
 
     <div class="clearButton" style="display:inline-block;">
       <button type="button" onClick="clearScreen()" class="btn">清空聊天窗</button>
@@ -924,7 +960,7 @@
     </div>
   </div>
 
-  <div class="chatWindow" style="display:inline-block;float: right">
+  <div class="chatWindow" style="display:inline-block;float: right;width: 60%">
     <div class="windowTitle">
       <div class="clearButton" style="display:inline-block;">
         <button type="button" onClick="clearInfoWindow()" class="btn">清空信息窗</button>
