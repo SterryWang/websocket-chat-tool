@@ -38,6 +38,10 @@ public class SysHelperRequest extends  BroadcastMessageRequest{
      * 通知级别
      */
     private String informLevel;
+    /**
+     * 环境别名，比如UAT，REL，SIT等，用于前端显示时进行过滤
+     */
+    private  String envProfile;
 
     /**
      * 定义通知消息内容格式枚举

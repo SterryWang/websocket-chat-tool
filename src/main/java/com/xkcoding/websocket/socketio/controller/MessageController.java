@@ -42,13 +42,14 @@ public class MessageController {
             return Dict.create().set("flag", false).set("code", 400).set("message", "参数为空");
         }
         log.info("拦截到用户{}发来的群发信息{}", message.getFromUserName(), message.getMessage());
-        messageHandler.sendToBroadcast(message,false);
+        messageHandler.sendToBroadcast(message, false);
         return Dict.create().set("flag", true).set("code", 200).set("message",
             "发送成功");
     }
 
     /**
      * 系统运行助手
+     *
      * @param message
      * @return
      */
@@ -57,8 +58,16 @@ public class MessageController {
         if (isBlank(message)) {
             return Dict.create().set("flag", false).set("code", 400).set("message", "参数为空");
         }
-        log.info("拦截到系统运行通知{}", message.getFromUserName(), message.getMessage());
-        messageHandler.sendToBroadcast(message,true);
+        log.info("拦截到{}运行通知:{}", message.getFromUserName(), message.getMessage());
+        //临时屏蔽HTML通知
+        /*if (SysHelperRequest.MsgContentTypeEnum.HTML.getValue().equals(message.getContentType())) {
+            log.info("html通知格式，暂时不发送到通知平台");
+            return Dict.create().set("flag", true).set("code", 200).set("message",
+                "html通知格式，暂时不响应");
+        }*/
+
+
+        messageHandler.sendToBroadcast(message, true);
         return Dict.create().set("flag", true).set("code", 200).set("message",
             "发送成功");
     }
@@ -66,12 +75,11 @@ public class MessageController {
     @PostMapping("/getAllUsers")
     public Dict getAllUsers() {
         List<SocketChannel> userInfoList = socketChannelDao.findAll();
-       // message.add("张三");
-       // message.add("李四");
+        // message.add("张三");
+        // message.add("李四");
 
 
-
-       // log.info("全部在线用户已经获取！");
+        // log.info("全部在线用户已经获取！");
         return Dict.create().set("flag", true).set("code", 200).set("message", userInfoList);
     }
 
