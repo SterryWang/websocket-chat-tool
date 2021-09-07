@@ -12,7 +12,7 @@
 
    此工具的另一大功能是即时通讯，主要目的是为了就相关故障事件的解决，进行沟通和协作。当然，你也可以把它单独当做一个聊天工具来使用，具备广播和私聊功能。
 
-   此工具的项目骨架是基于开源项目[spring-boot-demo/demo-websocket-socketio at master · xkcoding/spring-boot-demo (github.com)](https://github.com/xkcoding/spring-boot-demo/tree/master/demo-websocket-socketio)，感谢大神发布的开源代码。在原来的基础上重点增加了事件播报功能，同时前端部分进行了重新绘制，功能界面做了调整。
+   此工具的项目骨架是基于开源项目[spring-boot-demo/demo-websocket-socketio at master · xkcoding/spring-boot-demo (github.com)](https://github.com/xkcoding/spring-boot-demo/tree/master/demo-websocket-socketio)，感谢大神发布的开源代码。在原来的基础上重点增加了事件播报功能，同时前端部分进行了重新绘制，功能界面做了调整，支持浏览器通知，并且支持通知开关等功能。
 
    
 
