@@ -24,7 +24,7 @@ import java.util.List;
  * 消息发送Controller
  * </p>
  *
- * @author yangkai.shen
+ *
  * @date Created in 2018-12-18 19:50
  */
 @RestController
